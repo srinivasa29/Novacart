@@ -70,8 +70,8 @@ I believe clean code is as important as a clean UI.
 I'm always looking to build cool things with interesting people.
 
 - **Manne Srinivasa Rao**
-- [Check out my GitHub](https://github.com/YOUR_GITHUB_USER)
-- [Let's talk on LinkedIn](https://linkedin.com/in/YOUR_LINKEDIN)
+- [Check out my GitHub](https://github.com/srinivasa29)
+- [Let's talk on LinkedIn](https://www.linkedin.com/in/mannepulasrinivasa/)
 
 ---
 
