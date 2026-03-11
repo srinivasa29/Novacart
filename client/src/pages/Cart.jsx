@@ -1,10 +1,19 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 import { Link } from 'react-router-dom';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, Clock } from 'lucide-react';
 
 const Cart = () => {
     const { items, removeFromCart, updateQuantity, totalAmount, subtotal, discount, discountAmount, applyCoupon } = useCart();
+    const { toggleWishlist, isInWishlist } = useWishlist();
+
+    const handleMoveToWishlist = (item) => {
+        if (!isInWishlist(item._id)) {
+            toggleWishlist(item);
+        }
+        removeFromCart(item._id);
+    };
 
     if (items.length === 0) {
         return (
@@ -77,7 +86,12 @@ const Cart = () => {
                                     </div>
 
                                     <div style={{ display: 'flex', gap: '1rem' }}>
-                                        <button style={{ background: 'none', color: 'var(--primary)', fontSize: '0.8rem', fontWeight: '700' }}>Move to Wishlist</button>
+                                        <button 
+                                            onClick={() => handleMoveToWishlist(item)}
+                                            style={{ background: 'none', color: 'var(--primary)', fontSize: '0.8rem', fontWeight: '700' }}
+                                        >
+                                            Move to Wishlist
+                                        </button>
                                         <button
                                             onClick={() => removeFromCart(item._id)}
                                             style={{ color: '#ef4444', display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: '600', fontSize: '0.8rem', background: 'none' }}
@@ -119,7 +133,7 @@ const Cart = () => {
                                     Apply
                                 </button>
                             </div>
-                            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Try <strong>SAVE10</strong> for 10% off your order.</p>
+                            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Try <strong>NOVA20</strong> for 20% off your order.</p>
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', marginBottom: '2rem' }}>

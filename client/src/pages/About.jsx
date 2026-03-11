@@ -8,30 +8,30 @@ const About = () => {
                 <span style={{ color: 'var(--primary)', fontWeight: '800', letterSpacing: '0.2rem', display: 'block', marginBottom: '1rem' }}>OUR MISSION</span>
                 <h1 style={{ fontSize: '4.5rem', lineHeight: '1', marginBottom: '2rem' }}>Built for <span className="text-gradient">Modern</span> Shoppers.</h1>
                 <p style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', lineHeight: '1.8' }}>
-                    We simplify online shopping by combining smart technology with trusted products. At NovaCart, we value quality and speed above all else, ensuring every interaction feels premium and effortless.
+                    We aim to simplify online shopping by combining modern technology with a curated selection of products. At NovaCart, we're building a platform where quality and user experience come first, ensuring every interaction feels premium and effortless.
                 </p>
             </div>
 
             <div className="card" style={{ padding: '4rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center', marginBottom: '8rem' }}>
                 <div>
                     <h2 style={{ fontSize: '2.5rem', marginBottom: '1.5rem' }}>Why We Exist</h2>
-                    <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: '1.8' }}>The e-commerce world is cluttered. NovaCart acts as a filter, bringing you only what matters. Our platform is engineered for those who appreciate high-quality craft and lightning-fast logistics.</p>
+                    <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: '1.8' }}>The e-commerce world is often overwhelming. NovaCart is designed to act as a clear, efficient space for discovery. Our platform is built using modern frameworks to prioritize a smooth, high-quality shopping journey.</p>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
                         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                             <Globe size={24} color="var(--primary)" />
-                            <span style={{ fontWeight: '700' }}>Global Scale</span>
+                            <span style={{ fontWeight: '700' }}>Modern Design</span>
                         </div>
                         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                             <Users size={24} color="var(--primary)" />
-                            <span style={{ fontWeight: '700' }}>2M+ Happy Users</span>
+                            <span style={{ fontWeight: '700' }}>Fast Experience</span>
                         </div>
                         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                             <Award size={24} color="var(--primary)" />
-                            <span style={{ fontWeight: '700' }}>Premium Service</span>
+                            <span style={{ fontWeight: '700' }}>Quality Products</span>
                         </div>
                         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                             <ShieldCheck size={24} color="var(--primary)" />
-                            <span style={{ fontWeight: '700' }}>100% Trust</span>
+                            <span style={{ fontWeight: '700' }}>Secure System</span>
                         </div>
                     </div>
                 </div>

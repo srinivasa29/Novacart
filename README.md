@@ -65,4 +65,14 @@ I believe clean code is as important as a clean UI.
 
 ---
 
+## 👋 Let's Connect
 
+I'm always looking to build cool things with interesting people.
+
+- **Manne Srinivasa Rao**
+- [Check out my GitHub](https://github.com/YOUR_GITHUB_USER)
+- [Let's talk on LinkedIn](https://linkedin.com/in/YOUR_LINKEDIN)
+
+---
+
+> Built with ☕ and a passion for great code.

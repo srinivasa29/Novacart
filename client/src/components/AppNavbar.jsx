@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Heart, User, Search, LogOut } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -8,6 +8,23 @@ const AppNavbar = () => {
     const { itemCount } = useCart();
     const { logout, user } = useAuth();
     const location = useLocation();
+    const navigate = useNavigate();
+    const [searchQuery, setSearchQuery] = React.useState('');
+    const [isSearchVisible, setIsSearchVisible] = React.useState(false);
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            navigate(`/shop?q=${encodeURIComponent(searchQuery.trim())}`);
+            setIsSearchVisible(false);
+            setSearchQuery('');
+        }
+    };
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    };
 
     const navLinks = [
         { name: 'SHOP', path: '/shop' },
@@ -31,7 +48,32 @@ const AppNavbar = () => {
 
                 <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
                     <div style={{ display: 'flex', gap: '1.5rem', color: 'var(--text-primary)', alignItems: 'center' }}>
-                        <Search size={20} style={{ cursor: 'pointer' }} />
+                        <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+                            <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center' }}>
+                                <input
+                                    type="text"
+                                    placeholder="Search essentials..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    style={{
+                                        width: isSearchVisible ? '200px' : '0px',
+                                        padding: isSearchVisible ? '0.5rem 1rem' : '0px',
+                                        opacity: isSearchVisible ? 1 : 0,
+                                        transition: 'all 0.3s ease',
+                                        borderRadius: '100px',
+                                        border: '1px solid #e2e8f0',
+                                        fontSize: '0.8rem',
+                                        outline: 'none',
+                                        background: 'rgba(255,255,255,0.5)'
+                                    }}
+                                />
+                                <Search 
+                                    size={20} 
+                                    style={{ cursor: 'pointer', marginLeft: isSearchVisible ? '-30px' : '0', color: isSearchVisible ? 'var(--primary)' : 'inherit' }} 
+                                    onClick={() => setIsSearchVisible(!isSearchVisible)}
+                                />
+                            </form>
+                        </div>
                         <Link to="/wishlist" style={{ color: 'inherit', display: 'flex' }}><Heart size={20} /></Link>
                         <Link to="/cart" style={{ color: 'inherit', display: 'flex', position: 'relative' }}>
                             <ShoppingBag size={20} />
@@ -62,7 +104,7 @@ const AppNavbar = () => {
                         <span style={{ fontSize: '0.8rem', fontWeight: '800', color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
                             HI, {user?.name?.toUpperCase() || 'USER'}
                         </span>
-                        <button onClick={logout} style={{ background: 'none', color: '#ef4444', display: 'flex', padding: '0.4rem', borderRadius: '8px', transition: 'background 0.2s' }}>
+                        <button onClick={handleLogout} style={{ background: 'none', color: '#ef4444', display: 'flex', padding: '0.4rem', borderRadius: '8px', transition: 'background 0.2s' }}>
                             <LogOut size={20} />
                         </button>
                     </div>

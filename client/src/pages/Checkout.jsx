@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { CreditCard, Truck, ShieldCheck, Ticket, ChevronRight } from 'lucide-react';
+import axios from '../utils/axios';
+import { useNavigate } from 'react-router-dom';
 
 const Checkout = () => {
-    const { totalAmount, items, clearCart } = useCart();
+    const { totalAmount, subtotal, discountAmount, discount, items, clearCart, applyCoupon } = useCart();
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
@@ -12,24 +16,54 @@ const Checkout = () => {
         zip: '',
         coupon: ''
     });
-    const [discount, setDiscount] = useState(0);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const applyCoupon = () => {
-        if (formData.coupon === 'NOVA20') {
-            setDiscount(totalAmount * 0.2);
-        } else {
-            alert('Invalid coupon code.');
+    const handleApplyCoupon = () => {
+        const res = applyCoupon(formData.coupon);
+        if (!res.success) {
+            alert(res.message);
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        alert('Order placed successfully! This will be connected to the backend in Phase 2.');
-        clearCart();
+        setLoading(true);
+
+        const orderData = {
+            orderItems: items.map(item => ({
+                name: item.name,
+                quantity: item.quantity,
+                image: item.image,
+                price: item.price,
+                product: item._id
+            })),
+            shippingAddress: {
+                fullName: formData.fullName,
+                address: formData.address,
+                city: formData.city,
+                zip: formData.zip
+            },
+            paymentMethod: 'Cash on Delivery',
+            itemsPrice: subtotal,
+            taxPrice: 0,
+            shippingPrice: 0,
+            totalPrice: totalAmount
+        };
+
+        try {
+            await axios.post('/orders', orderData);
+            alert('Order placed successfully! Thank you for shopping with Novacart.');
+            clearCart();
+            navigate('/');
+        } catch (error) {
+            console.error('Error placing order:', error);
+            alert(error.response?.data?.message || 'Failed to place order. Please try again.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -105,7 +139,7 @@ const Checkout = () => {
                         <h2 style={{ fontSize: '1.75rem', marginBottom: '2.5rem' }}>In Your Bag ({items.length})</h2>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '2.5rem', maxHeight: '250px', overflowY: 'auto' }}>
                             {items.map(item => (
-                                <div key={item.id} style={{ display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
+                                <div key={item._id} style={{ display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
                                     <div style={{ width: '70px', height: '70px', background: `url(${item.image}) center/cover`, borderRadius: '12px' }}></div>
                                     <div style={{ flex: 1 }}>
                                         <p style={{ fontSize: '0.95rem', fontWeight: '700' }}>{item.name}</p>
@@ -128,7 +162,7 @@ const Checkout = () => {
                                     style={{ flex: 1, padding: '0.9rem', borderRadius: '12px', background: 'var(--bg-soft)', border: '1px solid #e2e8f0', fontWeight: '600' }}
                                 />
                                 <button
-                                    onClick={applyCoupon}
+                                    onClick={handleApplyCoupon}
                                     type="button"
                                     style={{ padding: '0.9rem 1.5rem', background: 'var(--text-primary)', color: 'white', border: 'none', borderRadius: '12px', fontWeight: '700' }}
                                 >
@@ -141,7 +175,7 @@ const Checkout = () => {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2.5rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
                                 <span>Subtotal</span>
-                                <span style={{ fontWeight: '600', color: 'var(--text-primary)' }}>${totalAmount.toFixed(2)}</span>
+                                <span style={{ fontWeight: '600', color: 'var(--text-primary)' }}>${subtotal.toFixed(2)}</span>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
                                 <span>Shipping</span>
@@ -149,24 +183,35 @@ const Checkout = () => {
                             </div>
                             {discount > 0 && (
                                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#10b981' }}>
-                                    <span>Discount</span>
-                                    <span style={{ fontWeight: '700' }}>-${discount.toFixed(2)}</span>
+                                    <span>Discount (20%)</span>
+                                    <span style={{ fontWeight: '700' }}>-${discountAmount.toFixed(2)}</span>
                                 </div>
                             )}
                         </div>
-
+ 
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.75rem', fontWeight: '800', marginBottom: '3rem', borderTop: '1px solid #e2e8f0', paddingTop: '2rem' }}>
                             <span>Total</span>
-                            <span style={{ color: 'var(--primary)' }}>${(totalAmount - discount).toFixed(2)}</span>
+                            <span style={{ color: 'var(--primary)' }}>${totalAmount.toFixed(2)}</span>
                         </div>
 
                         <button
                             form="checkout-form"
                             type="submit"
+                            disabled={loading}
                             className="btn-primary"
-                            style={{ width: '100%', padding: '1.25rem', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}
+                            style={{ 
+                                width: '100%', 
+                                padding: '1.25rem', 
+                                fontSize: '1.1rem', 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center', 
+                                gap: '1rem',
+                                opacity: loading ? 0.7 : 1,
+                                cursor: loading ? 'not-allowed' : 'pointer'
+                            }}
                         >
-                            <ShieldCheck size={22} /> Complete Order
+                            {loading ? 'Processing...' : <><ShieldCheck size={22} /> Complete Order</>}
                         </button>
                     </div>
                 </div>

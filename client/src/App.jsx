@@ -38,16 +38,9 @@ function AppContent() {
                 <Route path="/" element={!isAuthenticated ? <GuestLayout /> : <AppLayout />}>
                     <Route index element={<Home />} />
                     <Route path="about" element={<About />} />
+                    <Route path="contact" element={<About />} />
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />
-                    {/* Static Guest Placeholders */}
-                    <Route path="careers" element={<About />} />
-                    <Route path="terms" element={<About />} />
-                    <Route path="privacy" element={<About />} />
-                    <Route path="faq" element={<About />} />
-                    <Route path="contact" element={<About />} />
-                    <Route path="shipping" element={<About />} />
-                    <Route path="returns" element={<About />} />
                 </Route>
 
                 {/* Authenticated Routes */}

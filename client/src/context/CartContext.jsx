@@ -5,7 +5,7 @@ const CartContext = createContext();
 const cartReducer = (state, action) => {
     switch (action.type) {
         case 'ADD_TO_CART':
-            const existingItemIndex = state.items.findIndex(item => item._id === action.payload.id);
+            const existingItemIndex = state.items.findIndex(item => item._id === action.payload._id);
             if (existingItemIndex > -1) {
                 const newItems = [...state.items];
                 newItems[existingItemIndex].quantity += 1;
@@ -18,12 +18,12 @@ const cartReducer = (state, action) => {
 
         case 'UPDATE_QUANTITY':
             if (action.payload.quantity <= 0) {
-                return { ...state, items: state.items.filter(item => item._id !== action.payload.id) };
+                return { ...state, items: state.items.filter(item => item._id !== action.payload._id) };
             }
             return {
                 ...state,
                 items: state.items.map(item =>
-                    item._id === action.payload.id
+                    item._id === action.payload._id
                         ? { ...item, quantity: action.payload.quantity }
                         : item
                 )
@@ -57,9 +57,9 @@ export const CartProvider = ({ children }) => {
     const clearCart = () => dispatch({ type: 'CLEAR_CART' });
 
     const applyCoupon = (code) => {
-        if (code.toUpperCase() === 'SAVE10') {
-            dispatch({ type: 'SET_DISCOUNT', payload: { code, amount: 0.1 } });
-            return { success: true, message: 'Coupon applied! 10% discount added.' };
+        if (code.toUpperCase() === 'NOVA20') {
+            dispatch({ type: 'SET_DISCOUNT', payload: { code, amount: 0.2 } });
+            return { success: true, message: 'Coupon applied! 20% discount added.' };
         }
         return { success: false, message: 'Invalid coupon code.' };
     };
